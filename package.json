@@ -1,0 +1,31 @@
+{
+  "name": "pricepal-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --env-file=.env index.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Eunice Pobee",
+  "license": "ISC",
+  "description": "App for comparing prices of goods/services",
+  "dependencies": {
+    "@mickeymond/express-oas-generator": "^1.0.47",
+    "@reis/mongoose-to-json": "^3.0.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "errorhandler": "^1.5.1",
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.2",
+    "mongoose-errors": "^1.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
