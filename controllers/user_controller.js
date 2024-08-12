@@ -121,27 +121,20 @@ export const tokenLogin = async (req, res) => {
 
 
 
-// Function to get everything about one user
-export const getUser = async (req, res,next) => {
+// Function to get a user by id
+export const getUserById = async (req, res, next) => {
     try {
-        const userName = req.params.userName.toLowerCase();
-        const options = { sort: {startDate: -1 }}
-        // Get user details
-        const getUserDetails = await UserModel
-            .findOne({userName})
-            .select({password: false })
-            .populate({path: 'userProfile', options})
-            .populate({path: 'education', options})
-            .populate({path: 'experience', options})
-            .populate({path: 'skills', options})
-            .populate({path: 'achievements', options: { sort: { date: -1 }}})
-            .populate({path: 'projects', options})
-            .populate({path: 'volunteering', options});
+        // Get user by id
+        const getUser = await UserModel.findById(req.params.id);
+        // Check if the user exists
+        if (!getUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         // Return response
-        return res.status(200).json({user: getUserDetails})
+        return res.status(200).json(getUser)
     } catch (error) {
-        next(error)
-        console.log(error)
+        // Pass error to error handling middleware
+        next(error);
     }
 }
 
@@ -196,3 +189,20 @@ export const logout = async (req, res) => {
         console.log(error)
     }
 };
+
+
+// Function to delete a user
+export const deleteUser = async (req, res, next) => {
+    try {
+        // Delete user by id
+        const deletedUser = await UserModel.findByIdAndDelete(req.params.id, req.body)
+        if (!deletedUser) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        // Return response
+        res.status(200).json({ message: 'User successfully deleted' })
+    } catch (error) {
+        // Pass error to error handling middleware
+        next(error)
+    }
+}
