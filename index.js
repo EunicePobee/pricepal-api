@@ -6,7 +6,9 @@ import 'dotenv/config';
 import { dbConnection } from "./config/db.js";
 import errorHandler from "errorhandler";
 import { userRouter } from "./routes/user_route.js";
-// import { userProfileRouter } from "./routes/userProfile_route.js";
+import { categoryRouter } from "./routes/category_route.js";
+import { companyRouter } from "./routes/company_route.js";
+import { productRouter } from "./routes/product_route.js";
 // import {restartServer} from "./restart_server.js"
 
 
@@ -15,7 +17,7 @@ const app = express();
 
 expressOasGenerator.handleResponses(app, {
     alwaysServeDocs: true,
-    tags: ['auth', 'userProfile', 'skills', 'projects', 'volunteering', 'experiences', 'education', 'achievements'],
+    tags: ['auth', 'categories', 'companies', 'products'],
     mongooseModels: mongoose.modelNames(),
 });
 
@@ -45,6 +47,9 @@ dbConnection();
 
 // Use routes
 app.use('/api/v1', userRouter);
+app.use('/api/v1', categoryRouter);
+app.use('/api/v1', companyRouter);
+app.use('/api/v1', productRouter);
 
 
 expressOasGenerator.handleRequests();
