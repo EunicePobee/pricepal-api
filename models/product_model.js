@@ -6,6 +6,7 @@ const productSchema = new Schema({
     productName: { type: String, required: true },
     categoryId: {type: Types.ObjectId, ref: 'Category', required: true },
     companyId: {type: Types.ObjectId, ref: 'Company', required: true },
+    state: {type: String, enum: ['Buying', 'Selling', "Mid Rate"]},
     price: { type: Number, required: true }
 }, {
     timestamps: true

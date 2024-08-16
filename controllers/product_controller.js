@@ -1,5 +1,6 @@
 import { ProductModel } from "../models/product_model.js";
 import { productSchema } from "../schemas/product_schema.js";
+import { CompanyModel } from "../models/company_model.js";
 
 
 // Function to add a product
@@ -13,18 +14,25 @@ export const postProduct = async (req, res, next) => {
         }
 
         // Extract the product name from the request body
-        const { productName } = value
+        const { productName, companyId, state } = req.body
+        // const companyId = req.body.companyId
         //  Check if product already exists
-        const existingProduct = await ProductModel.findOne({ productName });
+        const existingProduct = await ProductModel.findOne({ productName: productName, companyId: companyId, state: state});
         if (existingProduct) {
             // Return conflict status if product exists
-            return res.status(409).json('The Product already exists.')
+            return res.status(409).json('The Product with the same name  already exists for this company.')
+        }
+
+        const company = await CompanyModel.findById(companyId);
+        if(!company) {
+            return res.status(404).send("Company not found");
         }
 
         // Create new product with the validated value
-        const newProduct = await ProductModel.create({ ...value});
+        const newProduct = await ProductModel.create({ ...value, company: companyId });
+        company.products.push(newProduct._id)
         // Save the new product to the database
-        await newProduct.save();
+        await company.save();
 
         // Return success response with the new product
          res.status(201).json({ message: 'Product created successfully', newProduct })
@@ -98,7 +106,7 @@ export const updateProduct = async (req, res, next) => {
         }
     
         // Update product by id
-        const updatedProduct = await productModel.findByIdAndUpdate(req.params.id, value, { new: true });
+        const updatedProduct = await ProductModel.findByIdAndUpdate(req.params.id, value, { new: true });
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
