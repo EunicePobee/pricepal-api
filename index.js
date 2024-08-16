@@ -9,6 +9,7 @@ import { userRouter } from "./routes/user_route.js";
 import { categoryRouter } from "./routes/category_route.js";
 import { companyRouter } from "./routes/company_route.js";
 import { productRouter } from "./routes/product_route.js";
+import cookieParser from "cookie-parser";
 // import {restartServer} from "./restart_server.js"
 
 
@@ -27,6 +28,8 @@ expressOasGenerator.handleResponses(app, {
 app.use(express.json());
 app.use(cors({credentials: true, origin: '*'}));
 app.use(errorHandler({log: false}));
+app.use(cookieParser());
+// app.use(express.urlencoded({ extended: true }));
 
 
 // Connect to database

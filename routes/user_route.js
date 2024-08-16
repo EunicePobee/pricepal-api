@@ -12,7 +12,7 @@ userRouter.post('/users/auth/signup', signup);
 
 userRouter.post('/users/auth/token/login', tokenLogin);
 
-userRouter.get('/users/auth/:userName', getUserById);
+userRouter.get('/users/auth/:id', getUserById);
 
 userRouter.get('/users', getUsers);
 

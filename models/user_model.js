@@ -10,6 +10,7 @@ const userSchema = new Schema({
         password: { type: String },
         confirmPassword: { type: String },
         termsAndConditions: { type: Boolean },
+        role: {type: String, default: 'user', enum: ['admin', 'user']},
         userProfile: {type: Types.ObjectId, ref: 'UserProfile'}
     }, {
         timestamps: true

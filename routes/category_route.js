@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { checkAuth } from "../middlewares/auth.js";
 import { hasPermission } from "../middlewares/auth.js";
-import { deleteCategory, getCategories, getCategoryById, postCategory, updateCategory } from "../controllers/category_controller.js";
+import { deleteCategory, getCategories, getCategoryById, getCompleteCategory, postCategory, updateCategory } from "../controllers/category_controller.js";
 
 
 // Create router
@@ -9,12 +9,14 @@ export const categoryRouter = Router();
 
 
 // Define routes
-categoryRouter.post('/admin/categories', checkAuth, hasPermission, postCategory);
+categoryRouter.post('/admin/categories', checkAuth, hasPermission('post_category'), postCategory);
 
-categoryRouter.get('/admin/categories', checkAuth, hasPermission, getCategories);
+categoryRouter.get('/admin/categories', getCategories);
 
-categoryRouter.get('/admin/categories/:id', checkAuth, hasPermission, getCategoryById);
+categoryRouter.get('/admin/categories/:id', getCategoryById);
 
-categoryRouter.patch('/admin/categories/:id', checkAuth, hasPermission, updateCategory);
+categoryRouter.get('/admin/categories/:categoryName', getCompleteCategory);
 
-categoryRouter.delete('/admin/categories/:id', checkAuth, hasPermission, deleteCategory);
+categoryRouter.patch('/admin/categories/:id', checkAuth, hasPermission('update_category'), updateCategory);
+
+categoryRouter.delete('/admin/categories/:id', checkAuth, hasPermission('delete_category'), deleteCategory);
