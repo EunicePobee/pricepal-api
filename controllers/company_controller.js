@@ -7,8 +7,11 @@ import { CategoryModel } from "../models/category_model.js"
 export const postCompany = async (req, res, next) => {
     try {
         // Validate data provided by the user
-        const { error, value } = companySchema.validate(req.body);
-        console.log(req.body)
+        const { error, value } = companySchema.validate({
+            ...req.body,
+            logo: req.file.filename
+        });
+        // console.log(req.body)
         // console.log(req.file)
         if (error) {
             // Return validation error message 
@@ -19,10 +22,7 @@ export const postCompany = async (req, res, next) => {
         // console.log('Category ID from Request:', req?.category?.id);
 
         // Extract the company name from the request body
-        const { companyName, categoryId } = value
-        if(!categoryId) {
-            return res.status(400).send('Category ID is missing.');
-        }
+        const { companyName } = value
         //  Check if company already exists
         const existingCompany = await CompanyModel.findOne({ companyName });
         if (existingCompany) {
@@ -30,19 +30,23 @@ export const postCompany = async (req, res, next) => {
             return res.status(409).json('The Company already exists.')
         }
 
+        console.log('Req.body.categoryTd', req.body.categoryId)
+        const categoryId = req.body.categoryId
+        
+
         const category = await CategoryModel.findById(categoryId);
-        if(!category) {
+        if (!category) {
             return res.status(404).send("Category not found");
         }
 
         // Create new company with the validated value
         const newCompany = await CompanyModel.create({
             ...value,
-            logo: req.file.filename,
+            // logo: req.file.filename,
             category: categoryId
         });
-
-        category.company.push(newCompany.categoryId)
+        console.log('Category.companies', category.companies)
+        category.companies.push(newCompany._id)
 
         // Save the new company to the database
         await category.save();
@@ -113,11 +117,11 @@ export const getCompanyById = async (req, res, next) => {
 export const getCompleteCompany = async (req, res, next) => {
     try {
         const companyName = req.params.companyName.toLowerCase();
-        // const options = { sort: {startDate: -1 }}
+        const options = { sort: {price: 1 }}
         // Get company details
         const getCompanyDetails = await CompanyModel
             .findOne({ companyName })
-            .populate({ path: 'products' })
+            .populate({ path: 'products', options })
 
         // Return response
         return res.status(200).json({ company: getCompanyDetails })
