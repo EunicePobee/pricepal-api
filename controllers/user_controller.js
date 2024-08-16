@@ -102,6 +102,7 @@ export const tokenLogin = async (req, res) => {
                      process.env.JWT_PRIVATE_KEY,
                     { expiresIn: '72h' }
                     );
+                    res.cookie('token', token)
                 // Return response
                 return  res.status(200).json({
                     message: 'User logged in',
@@ -182,7 +183,10 @@ export const patchUser = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         // Destroy user session
-        await req.session.destroy();
+        // await req.cookies.token.destroy();
+        res.clearCookie('token')
+        console.log('Req.cookies', req.cookies)
+        // console.log('Req.session', req.session)
         // Return response
         return res.status(200).json('Logout successful');
     } catch (error) {

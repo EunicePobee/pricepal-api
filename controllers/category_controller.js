@@ -88,6 +88,25 @@ export const getCategoryById = async (req, res, next) => {
 }
 
 
+// Function to get everything about one category
+export const getCompleteCategory = async (req, res,next) => {
+    try {
+        const categoryName = req.params.categoryName.toLowerCase();
+        // const options = { sort: {startDate: -1 }}
+        // Get category details
+        const getCategoryDetails = await CategoryModel
+            .findOne({categoryName})
+            .populate({path: 'companies'})
+            
+        // Return response
+        return res.status(200).json({category: getCategoryDetails})
+    } catch (error) {
+        next(error)
+        console.log(error)
+    }
+}
+
+
 // Function to update a category
 export const updateCategory = async (req, res, next) => {
     try {
