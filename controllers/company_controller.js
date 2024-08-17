@@ -46,7 +46,7 @@ export const postCompany = async (req, res, next) => {
             category: categoryId
         });
         console.log('Category.companies', category.companies)
-        category.companies.push(newCompany)
+        category.companies.push(newCompany._id)
 
         // Save the new company to the database
         await category.save();
@@ -67,7 +67,7 @@ export const getCompanies = async (req, res, next) => {
         const {
             filter = "{}",
             sort = "{}",
-            fields = "{}",
+            // fields = "{}",
             limit = 10,
             skip = 0
         } = req.query;
@@ -75,15 +75,18 @@ export const getCompanies = async (req, res, next) => {
         // Parse query parameters
         const filterParsed = JSON.parse(filter);
         const sortParsed = JSON.parse(sort);
-        const fieldsParsed = JSON.parse(fields);
+        // const fieldsParsed = JSON.parse(fields);
         const limitParsed = parseInt(limit, 10);
         const skipParsed = parseInt(skip, 10);
 
         // Get all companies from database
         const allCompanies = await CompanyModel
+            // 
             .find(filterParsed)
+            .populate({path: "categoryId"})
+            .populate({path: "products"})
             .sort(sortParsed)
-            .select(fieldsParsed)
+            // .select(fieldsParsed)
             .limit(limitParsed)
             .skip(skipParsed);
         // Return response
@@ -116,7 +119,7 @@ export const getCompanyById = async (req, res, next) => {
 // Function to get everything about one company
 export const getCompleteCompany = async (req, res, next) => {
     try {
-        const companyName = req.params.companyName.toLowerCase();
+        const companyName = req.params.companyName;
         const options = { sort: {price: 1 }}
         // Get company details
         const getCompanyDetails = await CompanyModel

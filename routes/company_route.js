@@ -14,7 +14,7 @@ companyRouter.post('/admin/companies', remoteUpload.single('logo'), checkAuth, h
 
 companyRouter.get('/admin/companies', getCompanies);
 
-companyRouter.get('/admin/companies/:id', getCompanyById);
+// companyRouter.get('/admin/companies/:id', getCompanyById);
 
 companyRouter.get('/admin/companies/:companyName', getCompleteCompany)
 
