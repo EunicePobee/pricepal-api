@@ -46,7 +46,7 @@ export const postCompany = async (req, res, next) => {
             category: categoryId
         });
         console.log('Category.companies', category.companies)
-        category.companies.push(newCompany._id)
+        category.companies.push(newCompany)
 
         // Save the new company to the database
         await category.save();
