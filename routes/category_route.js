@@ -13,7 +13,7 @@ categoryRouter.post('/admin/categories', checkAuth, hasPermission('post_category
 
 categoryRouter.get('/admin/categories', getCategories);
 
-categoryRouter.get('/admin/categories/:id', getCategoryById);
+// categoryRouter.get('/admin/categories/:id', getCategoryById);
 
 categoryRouter.get('/admin/categories/:categoryName', getCompleteCategory);
 
